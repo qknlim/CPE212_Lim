@@ -1,0 +1,19 @@
+---
+  - hosts: all
+    become: true
+    tasks:
+
+    - name: Update Repository Index
+      dnf:
+        update_cache: yes
+
+
+    - name: Install Apache2 Package
+      dnf:
+        name: httpd
+        state: present
+
+    - name: Add PHP support
+      dnf:
+        name: php
+
