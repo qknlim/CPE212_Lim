@@ -3,17 +3,21 @@
     become: true
     tasks:
 
-    - name: Update Repository Index
-      dnf:
+    - name: Install Apache2 and PHP  Package for Ubuntu
+      apt:
+        name:
+          - "{{ apache_package }}"
+          - "{{ php_package }}"
+        state: latest
         update_cache: yes
+      when: ansible_distribution == "Ubuntu"
 
-
-    - name: Install Apache2 Package
+    - name: Install Apache2 Package for CentOS
       dnf:
-        name: httpd
-        state: present
-
-    - name: Add PHP support
-      dnf:
-        name: php
+        name:
+          - "{{ apache_package }}"
+          - "{{ php_package }}"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "CentOS"
 

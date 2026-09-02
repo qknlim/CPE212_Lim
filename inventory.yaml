@@ -1,0 +1,11 @@
+all:
+  children:
+    web_servers:
+      hosts:
+        vm01:
+          ansible_host: kenzo@192.168.56.106
+
+    db_servers:
+      hosts:
+        vm02:
+          ansible_host: kenzo@192.168.56.107
