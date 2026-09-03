@@ -1,0 +1,18 @@
+---
+- name: Install Nginx
+  tags:
+    - web
+    - nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+
+- name: Start and enable Nginx
+  tags:
+    - web
+    - nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes

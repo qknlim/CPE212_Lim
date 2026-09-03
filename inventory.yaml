@@ -1,43 +1,18 @@
 all:
   children:
-<<<<<<< HEAD
     web_servers:
       hosts:
-        vm01:
-          ansible_host: kenzo@192.168.56.106
+        server1:
+          ansible_host: kenzo@192.168.56.7
+        server3:
+          ansible_host: kenzo@192.168.56.9
 
     db_servers:
       hosts:
-        vm02:
-          ansible_host: kenzo@192.168.56.107
-=======
+        server2:
+          ansible_host: kenzo@192.168.56.8
 
-     ubuntu:
-       vars:
-        ansible_user: kenzo
-       hosts:
-          server1:
-            ansible_host: 192.168.56.7
-            os_type: Ubuntu
-          server2:
-            ansible_host: 192.168.56.8
-            os_type: Ubuntu
-
-     centos:
-       vars:
-        ansible_user: kenzo
-       hosts:
-          server3:
-            ansible_host: 192.168.56.9
-            os_type: CentOS
-
-     linuxservers:
-        children:
-          ubuntu:
-          centos:
-
-     servers:
-       hosts:
-          server1:
-          server3:
->>>>>>> 363e08d3f22029eceffd3db298fd504e271e7bb0
+    file_servers:
+      hosts:
+        server3:
+          ansible_host: kenzo@192.168.56.9
