@@ -1,2 +1,2 @@
 # CPE212_Lim
-This is a new repository
+This repository contains my coursework, laboratory activities, and learning outputs for CPE212 - Automating Server Management
