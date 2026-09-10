@@ -1,8 +1,11 @@
 all:
   children:
-    web_servers:
+    workstations:
       hosts:
         server1:
           ansible_host: kenzo@192.168.56.107
+    web_servers:
+      hosts:
         server2:
           ansible_host: kenzo@192.168.56.106
+
