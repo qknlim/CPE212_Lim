@@ -1,0 +1,25 @@
+---
+  - hosts: all
+    become: true
+    tasks:
+
+    - name: Install Apache2 Package and PHP support for apache in Ubuntu
+      apt:
+        name:
+          - "{{ apache_package}}"
+          - "{{ php_package}}"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+
+    - name: Install Apache2 Package and PHP support for apache in CentOS
+      dnf:
+        name:
+          - "{{ apache_package }}"
+          - "{{ php_package }}"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "CentOS"
+
+
