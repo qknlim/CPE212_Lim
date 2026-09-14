@@ -1,5 +1,5 @@
 ---
-
+#
 -  name: Create an empty file
    hosts: all
    tasks:
