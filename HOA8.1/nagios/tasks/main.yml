@@ -1,0 +1,29 @@
+---
+# tasks file for nagios
+- name: Update local package index on Ubuntu
+  ansible.builtin.apt:
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Update local package index on CentOS
+  ansible.builtin.dnf:
+    update_cache: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Get latest Nagios Core release details
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/NagiosEnterprises/nagioscore/releases/latest
+    return_content: true
+  register: nagios_release
+
+- name: Download Nagios Core tarball
+  ansible.builtin.get_url:
+    url: "{{ nagios_release.json.assets | map(attribute='browser_download_url') | select('search', '\\.tar\\.gz$') | first }}"
+    dest: /tmp/nagioscore.tar.gz
+    mode: '0644'
+
+- name: Extract Nagios Core tarball
+  ansible.builtin.unarchive:
+    src: /tmp/nagioscore.tar.gz
+    dest: /tmp/
+    remote_src: true
