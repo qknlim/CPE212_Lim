@@ -1,0 +1,83 @@
+---
+# tasks file for prometheus
+    # Task 2: Create the Prometheus User
+    -  name: Create a dedicated prometheus system user and prevent from having a normal login shell
+       ansible.builtin.user:
+         name: prometheus
+         system: true
+         create_home: false
+         shell: /bin/false
+         state: present
+
+    -  name: Verify that the user was successfully created
+       ansible.builtin.command: id prometheus
+
+    # Task 3: Create Prometheus Directories
+    -  name: Create Prometheus Directories and Assign owner and group
+       ansible.builtin.file:
+         path: /etc/prometheus
+         state: directory
+         owner: prometheus
+         group: prometheus
+         mode: "0755"
+
+    -  name: Create libraries
+       ansible.builtin.file:
+         path:  /var/lib/prometheus
+         state: directory
+         owner: prometheus
+         group: prometheus
+         mode: "0755"
+
+    # Task 4: Download Prometheus
+    -  name: Download Prometheus archive
+       ansible.builtin.get_url:
+         url: https://github.com/prometheus/prometheus/releases/download/v2.53.0/prometheus-2.53.0.linux-amd64.tar.gz
+         dest: /
+         mode: "0755"
+
+    -  name: Extract Prometheus archive
+       ansible.builtin.unarchive:
+         src: prometheus-2.53.0.linux-amd64.tar.gz
+         dest: /
+         remote_src: true
+         mode: "0755"
+         owner: prometheus
+         group: prometheus
+
+    # Task 5: Install Prometheus Binaries
+    -  name: Install Prometheus binaries
+       ansible.builtin.copy:
+         src: /prometheus-2.53.0.linux-amd64/prometheus
+         dest: /usr/local/bin
+         remote_src: true
+         mode: "0755"
+         owner: prometheus
+         group: prometheus
+
+    -  name: Install prometheus configuration file
+       ansible.builtin.copy:
+         src: /prometheus-2.53.0.linux-amd64/prometheus.yml
+         dest: /etc/prometheus
+         remote_src: true
+         mode: "0755"
+         owner: prometheus
+         group: prometheus
+
+    -  name: Install prometheus console
+       ansible.builtin.copy:
+         src: /prometheus-2.53.0.linux-amd64/consoles
+         dest: /etc/prometheus
+         remote_src: true
+         mode: "0755"
+         owner: prometheus
+         group: prometheus
+
+    -  name: Install prometheus console libraries
+       ansible.builtin.copy:
+         src: /prometheus-2.53.0.linux-amd64/console_libraries
+         dest: /etc/prometheus
+         remote_src:
+         mode: "0755"
+         owner: prometheus
+         group: prometheus

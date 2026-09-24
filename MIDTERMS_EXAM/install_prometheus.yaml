@@ -1,0 +1,50 @@
+---
+-  hosts: all
+   become: true
+   pre_tasks:
+    # Task 1 : Prepare the serve
+    # Update the Package Repository
+#    -  name: Update package repository for Ubuntu
+#       ansible.builtin.apt:
+#         update_cache: yes
+#       when: ansible_distribution == "Ubuntu"
+
+#    -  name: Update package repository for CentOS
+#       ansible.builtin.dnf:
+#         update_cache: yes
+#       when: ansible_distribution == "CentOS"
+
+    # Upgrade Installed Packages
+#    -  name: Upgrade Installed Packages for Ubuntu
+#       ansible.builtin.apt:
+#         upgrade: dist
+#       when: ansible_distribution == "Ubuntu"
+
+#    -  name: Upgrade Installed Packages for CentOS
+#       ansible.builtin.dnf:
+#         update_only: true
+#       when: ansible_distribution == "CentOS"
+
+    # Install utilities required by the installation
+    -  name: Install utilities required by the Installation (Ubuntu)
+       ansible.builtin.apt:
+         name:
+          - tar
+          - wget
+          - curl
+       when: ansible_distribution == "Ubuntu"
+
+    -  name: Install utilities required by the Installation (CentOS)
+       ansible.builtin.dnf:
+         name:
+          - tar
+          - wget
+          - curl
+       when: ansible_distribution == "CentOS"
+
+
+-  name: Installing Prometheus
+   hosts: all
+   become: true
+   roles:
+      - prometheus
