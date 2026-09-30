@@ -1,0 +1,66 @@
+# 1 PREREQUISITE PACKAGE
+- name: Install prerequisite packages (Ubuntu)
+  apt:
+    name: [apt-transport-https, curl, gnupg]
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install prerequisite packages (CentOS)
+  yum:
+    name: [curl, gnupg2]
+    state: present
+  when: ansible_distribution == "CentOS"
+
+# 2 ELASTIC SIGNING KEY
+
+- name: Add the Elastic GPG key (Ubuntu)
+  shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/elasticsearch-keyring.gpg
+  when: ansible_distribution == "Ubuntu"
+
+- name: Add the Elastic GPG key (CentOS)
+  rpm_key:
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  when: ansible_distribution == "CentOS"
+
+# 3 REGISTER THE REPOSITORY
+# Ubuntu
+- name: Add the Elastic 8.x APT repository (Ubuntu)
+  copy:
+    dest: /etc/apt/sources.list.d/elastic-8.x.list
+    content: "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main\n"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Update apt cache after adding the repository
+  apt:
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+# CentOS
+- name: Add the Elastic 8.x YUM repository (CentOS)
+  yum_repository:
+    name: elastic-8.x
+    description: Elastic 8.x repository
+    baseurl: https://artifacts.elastic.co/packages/8.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    enabled: yes
+  when: ansible_distribution == "CentOS"
+
+# 4 INSTALL PACKAGES
+
+- name: Install Elasticsearch (Ubuntu)
+  apt:
+    name: elasticsearch
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Elasticsearch (CentOS)
+  yum:
+    name: elasticsearch
+    state: present
+  when: ansible_distribution == "CentOS"
+
