@@ -1,3 +1,4 @@
+# PREREQUISITE PACKAGE
 - name: Install prerequisite packages (Ubuntu)
   apt:
     name: [apt-transport-https, curl, gnupg]
@@ -11,6 +12,7 @@
     state: present
   when: ansible_facts['os_family'] == "RedHat"
 
+# ELASTIC SIGNING KEY
 - name: Add the Elastic GPG key (Ubuntu)
   shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
   args:
@@ -23,6 +25,7 @@
     state: present
   when: ansible_facts['os_family'] == "RedHat"
 
+# ADD THE REPOSITORY
 - name: Add the Elastic 8.x APT repository (Ubuntu)
   copy:
     dest: /etc/apt/sources.list.d/elastic-8.x.list
