@@ -1,0 +1,23 @@
+---
+-  name: Build and run web + DB docker container
+   hosts: local
+   become: false
+   tasks:
+     - name: Build the docker image from the dockerfile
+       community.docker.docker_image:
+         name: web-db-server
+         tag: latest
+         source: build
+         build:
+           path: "{{ playbook_dir }}"
+         state: present
+
+     - name: Run the container
+       community.docker.docker_container:
+         name: webdb
+         image: web-db-server:latest
+         state: started
+         restart_policy: unless-stopped
+         ports:
+           - "8080:80"
+           - "3306:3306"
