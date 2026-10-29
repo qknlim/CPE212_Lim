@@ -1,0 +1,8 @@
+server.port: 5601
+server.host: "0.0.0.0"
+server.name: "{{ inventory_hostname }}"
+
+elasticsearch.hosts:
+{% for host in groups.get('elasticsearch_node', []) %}
+  - "http://{{ hostvars[host]['ansible_host'] | default(hostvars[host]['ansible_default_ipv4']['address']) }}:9200"
+{% endfor %}

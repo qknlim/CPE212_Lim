@@ -1,0 +1,53 @@
+---
+
+-  hosts: all
+   become: true
+   tasks:
+
+    - name: install apache and php for Ubuntu servers
+      tags: apache,apache2,ubuntu
+      apt:
+        name:
+          - apache2
+          - libapache2-mod-php
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    - name: install apache and php for CentOS servers
+      tags: apache,centos,httpd
+      dnf:
+        name:
+          - httpd
+          - php
+        state: latest
+      when: ansible_distribution == "CentOS"
+
+    - name: start apache2 (Ubuntu)
+      tags: apache, ubuntu, apache2
+      service:
+        name: apache2
+        state: started
+      when: ansible_distribution == "Ubuntu"
+
+    - name: start httpd (CentOS)
+      tags: apache, centos, httpd
+      service:
+        name: httpd
+        state: started
+      when: ansible_distribution == "CentOS"
+
+
+- name: Apply common configurations across all ELK nodes
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Install and configure Kibana
+  hosts: all
+  become: true
+  roles:
+    - kibana
+
+
+

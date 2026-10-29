@@ -1,0 +1,39 @@
+---
+- name: Install prerequisites on Debian/Ubuntu
+  apt:
+    name:
+      - apt-transport-https
+      - gnupg2
+      - openjdk-11-jre
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Add Elastic GPG key on Debian/Ubuntu
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Add Elastic repository on Debian/Ubuntu
+  apt_repository:
+    repo: "deb https://artifacts.elastic.co/packages/8.x/apt stable main"
+    state: present
+    filename: elastic-8.x
+  when: ansible_os_family == "Debian"
+
+- name: Import Elastic GPG key on RHEL/CentOS
+  rpm_key:
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Add Elastic repository on RHEL/CentOS
+  yum_repository:
+    name: elastic-8.x
+    description: Elastic repository for 8.x packages
+    baseurl: https://artifacts.elastic.co/packages/8.x/yum
+    gpgcheck: yes
+    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    enabled: yes
+  when: ansible_os_family == "RedHat"

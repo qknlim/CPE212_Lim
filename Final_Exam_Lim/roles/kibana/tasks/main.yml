@@ -1,0 +1,28 @@
+---
+- name: Install Kibana
+  package:
+    name: kibana
+    state: present
+
+- name: Configure kibana.yml
+  template:
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+    owner: root
+    group: kibana
+    mode: '0660'
+  notify: restart kibana
+
+- name: Enable and start Kibana service
+  systemd:
+    name: kibana
+    enabled: yes
+    state: started
+
+- name: Allow Kibana port 5601 on CentOS firewall
+  firewalld:
+    port: 5601/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
+  when: ansible_os_family == "RedHat"
